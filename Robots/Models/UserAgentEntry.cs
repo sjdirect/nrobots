@@ -38,6 +38,22 @@ namespace Robots.Model
             }
         }
 
+        public CrawlDelayEntry CrawlDelayEntry 
+        {
+            get
+            {
+                return _entries.Find(e => e.Type == EntryType.CrawlDelay) as CrawlDelayEntry;
+            }
+        }
+
+        public SitemapEntry SitemapEntry
+        {
+            get
+            {
+                return _entries.Find(e => e.Type == EntryType.Sitemap) as SitemapEntry;
+            }
+        }
+
         public void AddEntry(Entry entry)
         {
             if (entry == null)

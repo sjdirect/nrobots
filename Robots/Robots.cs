@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using Robots.Model;
 
 namespace Robots
@@ -119,7 +119,8 @@ namespace Robots
 
             _baseUri = baseUri;
 
-            UserAgentEntry lastAgent = null;
+            List<UserAgentEntry> userAgentsGroup = new List<UserAgentEntry>();
+            bool addedEntriesToUserAgent = false;
             do
             {
                 string line = reader.ReadLine();
@@ -135,16 +136,39 @@ namespace Robots
 
                 if (entry.Type == EntryType.UserAgent)
                 {
-                    lastAgent = (UserAgentEntry) entry;
-                    _entries.Add(entry);
+                    UserAgentEntry userAgentEntry = (UserAgentEntry)entry;
+                    if (addedEntriesToUserAgent)
+                    {
+                        userAgentsGroup.Clear();
+                        addedEntriesToUserAgent = false;
+                    }
+                    
+                    UserAgentEntry foundUserAgentEntry = FindExplicitUserAgentEntry(userAgentEntry.UserAgent);
+                    if (foundUserAgentEntry == null)
+                    {
+                        _entries.Add(userAgentEntry);
+                        userAgentsGroup.Add(userAgentEntry);
+                    }
+                    else
+                    {
+                        userAgentsGroup.Add(foundUserAgentEntry);
+                    }
                 }
                 else if (entry.Type == EntryType.Comment)
                 {
                     _entries.Add(entry);
                 }
-                else if (lastAgent != null)
+                else if (entry.Type == EntryType.Sitemap)
                 {
-                    lastAgent.AddEntry(entry);
+                    _entries.Add(entry);
+                }
+                else if (userAgentsGroup.Count > 0)
+                {
+                    foreach (UserAgentEntry userAgent in userAgentsGroup)
+                    {
+                        userAgent.AddEntry(entry);
+                    }
+                    addedEntriesToUserAgent = true;
                 }
                 else
                 {
@@ -181,8 +205,8 @@ namespace Robots
             if (!uri.IsAbsoluteUri)
                 uri = new Uri(_baseUri, uri);
 
-            if (uri.Scheme != _baseUri.Scheme || uri.Authority != _baseUri.Authority)
-                return false;
+            //if (!IsInternalToDomain(uri))
+            //    return true;
 
             if (uri.LocalPath == "/robots.txt")
                 return false;
@@ -192,7 +216,7 @@ namespace Robots
                 return true;
 
 
-            string[] uriParts = uri.LocalPath.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] uriParts = uri.LocalPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var disallowEntry in userAgentEntry.DisallowEntries)
             {
                 bool result;
@@ -206,6 +230,48 @@ namespace Robots
             }
 
             return true;
+        }
+
+        #endregion
+
+        #region Methods: Crawl-Delay
+
+        public int GetCrawlDelay()
+        {
+            return GetCrawlDelay(UserAgents.AllAgents);
+        }
+
+        public int GetCrawlDelay(string userAgent)
+        {
+            int crawlDelay = 0;
+
+            var userAgentEntry = FindUserAgentEntry(userAgent);
+            if (userAgentEntry == null)
+                return crawlDelay;
+
+            if (userAgentEntry.CrawlDelayEntry != null)
+            {
+                crawlDelay = userAgentEntry.CrawlDelayEntry.CrawlDelay;
+            }
+
+            return crawlDelay;
+        }
+
+        #endregion
+
+        #region Sitemap
+
+        public IList<string> GetSitemapUrls()
+        {
+            List<string> sitemapUrls = new List<string>();
+
+            foreach(Entry sitemapEntry in _entries)
+            {
+                if ( (sitemapEntry is SitemapEntry) && (sitemapEntry != null) )
+                    sitemapUrls.Add(((SitemapEntry)sitemapEntry).SitemapUrl);
+            }
+            
+            return sitemapUrls;
         }
 
         #endregion
@@ -230,10 +296,29 @@ namespace Robots
             return allAgentsEntry;
         }
 
+        private UserAgentEntry FindExplicitUserAgentEntry(string userAgent)
+        {
+            UserAgentEntry targetEntry = null;
+            foreach (var entry in _entries)
+            {
+                var userAgentEntry = entry as UserAgentEntry;
+                if (userAgentEntry == null || userAgentEntry.Type != EntryType.UserAgent)
+                    continue;
+
+                if (string.Compare(userAgentEntry.UserAgent, userAgent, true) == 0)
+                {
+                    targetEntry = userAgentEntry;
+                    break;
+                }
+            }
+
+            return targetEntry;
+        }
+
         private bool CheckExplicitlyAllowed(UserAgentEntry userAgentEntry, Uri uri)
         {
-            if (uri.Scheme != _baseUri.Scheme || uri.Authority != _baseUri.Authority)
-                return false;
+            //if (!IsInternalToDomain(uri))
+            //    return true;
 
             string[] uriParts = uri.LocalPath.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
             foreach (var allowEntry in userAgentEntry.AllowEntries)
@@ -329,5 +414,12 @@ namespace Robots
 
             _entries.Add(entry);
         }
+
+        //This was removed since the _baseUri could change if a.com redirects to b.com. Then what if b.com has links to a.com? With this activated it will always allow because it would consider it external.
+        //We check the ParsedWebpageData.IsInternal before calling IsUrlAllowed to be sure it follows our classification of internal and not NRobots
+        //private bool IsInternalToDomain(Uri uri)
+        //{
+        //    return new Link(uri.AbsoluteUri).IsInternalTo(_baseUri.AbsoluteUri);
+        //}
     }
 }

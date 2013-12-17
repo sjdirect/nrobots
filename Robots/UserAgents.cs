@@ -2,6 +2,6 @@
 {
     public class UserAgents
     {
-        public const string AllAgents = "*";
+        public const string AllAgents = "*"; 
     }
 }

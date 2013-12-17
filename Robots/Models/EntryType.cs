@@ -6,6 +6,8 @@
         Comment,
         UserAgent,
         Disallow,
-        Allow
+        Allow,
+        CrawlDelay,
+        Sitemap
     }
 }

@@ -8,6 +8,8 @@ namespace Robots.Model
         private const string USER_AGENT_KEYWORD = "user-agent:";
         private const string DISALLOW_KEYWORD = "disallow:";
         private const string ALLOW_KEYWORD = "allow:";
+        private const string CRAWL_DELAY_KEYWORD = "crawl-delay:";
+        private const string SITEMAP_KEYWORD = "sitemap:";
 
         protected Entry(EntryType type)
         {
@@ -32,6 +34,10 @@ namespace Robots.Model
                     return new DisallowEntry();
                 case EntryType.UserAgent:
                     return new UserAgentEntry();
+                case EntryType.CrawlDelay:
+                    return new CrawlDelayEntry();
+                case EntryType.Sitemap:
+                    return new SitemapEntry();
             }
 
             throw new InvalidOperationException();
@@ -76,14 +82,23 @@ namespace Robots.Model
                     type = EntryType.UserAgent;
                     entry = CreateEntry(type);
                     entry.Comment = comment;
-                    ((UserAgentEntry) entry).UserAgent =
-                        entryText.Substring(USER_AGENT_KEYWORD.Length + 1).Trim().TrimEnd('?');
+                    string userAgent = entryText.Substring(USER_AGENT_KEYWORD.Length).Trim().TrimEnd('?');;
+
+                    if(userAgent == null || string.IsNullOrEmpty(userAgent.Trim()))
+                    {
+                        entry = null;
+                        return false;                         
+                    }
+                    else
+                    {
+                         ((UserAgentEntry) entry).UserAgent = userAgent;
+                    }
                 }
                 else if (entryText.StartsWith(DISALLOW_KEYWORD, true, CultureInfo.InvariantCulture))
                 {
                     type = EntryType.Disallow;
                     bool inverted = entryText.EndsWith("$");
-                    string value = entryText.Substring(DISALLOW_KEYWORD.Length + 1).Trim().TrimEnd('?');
+                    string value = entryText.Substring(DISALLOW_KEYWORD.Length).Trim().TrimEnd('?');
 
                     Uri url;
                     if (Uri.TryCreate(baseUri, value, out url))
@@ -98,7 +113,7 @@ namespace Robots.Model
                 {
                     type = EntryType.Allow;
                     bool inverted = entryText.EndsWith("$");
-                    string value = entryText.Substring(ALLOW_KEYWORD.Length + 1).Trim().TrimEnd('?');
+                    string value = entryText.Substring(ALLOW_KEYWORD.Length).Trim().TrimEnd('?');
 
                     Uri url;
                     if (Uri.TryCreate(baseUri, value, out url))
@@ -107,6 +122,40 @@ namespace Robots.Model
                         entry.Comment = comment;
                         ((UrlEntry)entry).Url = url;
                         ((UrlEntry)entry).Inverted = inverted;
+                    }
+                }
+                else if (entryText.StartsWith(CRAWL_DELAY_KEYWORD, true, CultureInfo.InvariantCulture))
+                {
+                    type = EntryType.CrawlDelay;
+                    string value = entryText.Substring(CRAWL_DELAY_KEYWORD.Length).Trim().TrimEnd('?');
+
+                    entry = CreateEntry(type);
+                    entry.Comment = comment;
+
+                    try
+                    {
+                        ((CrawlDelayEntry)entry).CrawlDelay = Convert.ToInt32(value);
+                    }
+                    catch
+                    {
+                        ((CrawlDelayEntry)entry).CrawlDelay = 0;
+                    }
+                }
+                else if (entryText.StartsWith(SITEMAP_KEYWORD, true, CultureInfo.InvariantCulture))
+                {
+                    type = EntryType.Sitemap;
+                    string value = entryText.Substring(SITEMAP_KEYWORD.Length).Trim().TrimEnd('?');
+
+                    entry = CreateEntry(type);
+                    entry.Comment = comment;
+
+                    try
+                    {
+                        ((SitemapEntry)entry).SitemapUrl = value;
+                    }
+                    catch
+                    {
+                        ((SitemapEntry)entry).SitemapUrl = "";
                     }
                 }
                 else

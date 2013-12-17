@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 
 namespace RobotsTests
@@ -16,13 +17,17 @@ namespace RobotsTests
         private static Robots.Robots _robotsUrl;
         private static Robots.Robots _robotsEmpty;
         private static Robots.Robots _robotsWildcards;
+        private static Robots.Robots _robotsCrawlDelay;
+        private static Robots.Robots _robotsSitemap;
+        private static Robots.Robots _robotsSitemapMultiple;
+        private static Robots.Robots _robotsGroupedUserAgents;
 
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
         ///</summary>
         public TestContext TestContext { get; set; }
-        
+
         private static Robots.Robots RobotsContent
         {
             get
@@ -87,6 +92,90 @@ Disallow: /a/*$"
             }
         }
 
+        private static Robots.Robots RobotsCrawlDelay
+        {
+            get
+            {
+                if (_robotsCrawlDelay == null)
+                {
+                    _robotsCrawlDelay = new Robots.Robots();
+                    _robotsCrawlDelay.LoadContent(
+        @"User-Agent: *
+Crawl-Delay: 20
+
+User-Agent: userAgentCrawlDelayIs1
+Crawl-Delay: 1
+
+User-Agent: userAgentCrawlDelayNotSpecified
+Allow: /
+
+User-Agent: userAgentCrawlDelayEmpty
+Crawl-Delay: ",
+                        BASE_URL
+                        );
+                }
+                return _robotsCrawlDelay;
+            }
+        }
+
+        private static Robots.Robots RobotsSitemap
+        {
+            get
+            {
+                if (_robotsSitemap == null)
+                {
+                    _robotsSitemap = new Robots.Robots();
+                    _robotsSitemap.LoadContent(
+@"Sitemap: http://a.com/sitemap.xml
+",
+                        BASE_URL
+                        );
+                }
+                return _robotsSitemap;
+            }
+        }
+
+        private static Robots.Robots RobotsSitemapMultiple
+        {
+            get
+            {
+                if (_robotsSitemapMultiple == null)
+                {
+                    _robotsSitemapMultiple = new Robots.Robots();
+                    _robotsSitemapMultiple.LoadContent(
+@"Sitemap: http://a.com/sitemap.xml
+Sitemap: http://b.com/sitemap.xml
+Sitemap: http://c.com/sitemap.xml
+",
+                        BASE_URL
+                        );
+                }
+                return _robotsSitemapMultiple;
+            }
+        }
+
+        private static Robots.Robots RobotsGroupedUserAgents
+        {
+            get
+            {
+                if (_robotsGroupedUserAgents == null)
+                {
+                    _robotsGroupedUserAgents = new Robots.Robots();
+                    _robotsGroupedUserAgents.LoadContent(
+        @"User-Agent: msnbot
+User-Agent: googlebot
+Disallow: /aaa
+
+User-Agent: slurp
+User-Agent: blahblah
+Disallow: /bbb
+",
+                        BASE_URL
+                        );
+                }
+                return _robotsGroupedUserAgents;
+            }
+        }
 
         #region Additional test attributes
         // 
@@ -172,6 +261,20 @@ Disallow: /a/*$"
         }
 
         [TestMethod]
+        public void Disallow_root_grouped_agents_robots_content_Test()
+        {
+            Assert.IsFalse(RobotsGroupedUserAgents.Allowed(BASE_URL + "/aaa", "googlebot"));
+            Assert.IsFalse(RobotsGroupedUserAgents.Allowed(BASE_URL + "/aaa", "msnbot"));
+            Assert.IsTrue(RobotsGroupedUserAgents.Allowed(BASE_URL + "/bbb", "googlebot"));
+            Assert.IsTrue(RobotsGroupedUserAgents.Allowed(BASE_URL + "/bbb", "msnbot"));
+
+            Assert.IsFalse(RobotsGroupedUserAgents.Allowed(BASE_URL + "/bbb", "slurp"));
+            Assert.IsFalse(RobotsGroupedUserAgents.Allowed(BASE_URL + "/bbb", "blahblah"));
+            Assert.IsTrue(RobotsGroupedUserAgents.Allowed(BASE_URL + "/aaa", "slurp"));
+            Assert.IsTrue(RobotsGroupedUserAgents.Allowed(BASE_URL + "/aaa", "blahblah")); 
+        }
+
+        [TestMethod]
         public void Allow_subfolder_wildcard_content_Test()
         {
             bool actual = RobotsWildcards.Allowed("/a/public/c/");
@@ -230,8 +333,8 @@ Disallow: /a/*$"
         [TestMethod]
         public void Uri_loaded_disallow_subfolder_Test()
         {
-            bool actual = RobotsUrl.Allowed("/recipe/pizza");
-            Assert.AreEqual(false, actual);
+            Assert.AreEqual(false, RobotsUrl.Allowed("/cashback/admin"));
+            Assert.AreEqual(false, RobotsUrl.Allowed("/cashback/admin/aaa/tool.html"));
         }
 
         [TestMethod]
@@ -246,6 +349,102 @@ Disallow: /a/*$"
         {
             bool actual = RobotsUrl.Allowed("/entertainment/music");
             Assert.AreEqual(true, actual);
+        }
+
+        [TestMethod]
+        public void CrawlDelay_NoUserAgentParam_UsesWildcardUserAgentCrawlDelayValue()
+        {
+            Assert.AreEqual(20, RobotsCrawlDelay.GetCrawlDelay());
+        }
+
+        [TestMethod]
+        public void CrawlDelay_NoCrawlDelayValueInRobotsDotText_ReturnZero()
+        {
+            Assert.AreEqual(0, RobotsEmpty.GetCrawlDelay());
+        }
+
+        [TestMethod]
+        public void CrawlDelay_NonExistentUserAgent_UsesWildcardCrawlDelayValue()
+        {
+            Assert.AreEqual(20, RobotsCrawlDelay.GetCrawlDelay("nonExistentUserAgent"));
+        }
+
+        [TestMethod]
+        public void CrawlDelay_UserAgentCrawlDelayIs1_Returns1()
+        {
+            Assert.AreEqual(1, RobotsCrawlDelay.GetCrawlDelay("userAgentCrawlDelayIs1"));
+        }
+
+        [TestMethod]
+        public void CrawlDelay_UserAgentCrawlDelayNotSpecified_ReturnsZero()
+        {
+            Assert.AreEqual(0, RobotsContent.GetCrawlDelay("userAgentCrawlDelayNotSpecified"));
+        }
+
+        [TestMethod]
+        public void CrawlDelay_UserAgentCrawlDelayEmpty_ReturnsZero()
+        {
+            Assert.AreEqual(0, RobotsContent.GetCrawlDelay("userAgentCrawlDelayEmpty"));
+        }
+
+
+        [TestMethod]
+        public void SitemapUrl_SingleSitemapPresent_ReturnsUrl()
+        {
+            Assert.AreEqual("http://a.com/sitemap.xml", RobotsSitemap.GetSitemapUrls()[0]);
+        }
+
+        [TestMethod]
+        public void SitemapUrl_NoSpaceBetween_ReturnsUrl()
+        {
+            Robots.Robots robots = new Robots.Robots();
+            robots.LoadContent(@"Sitemap:http://a.com/sitemap.xml", BASE_URL);
+
+            Assert.AreEqual("http://a.com/sitemap.xml", robots.GetSitemapUrls()[0]);
+        }
+
+        [TestMethod]
+        public void SitemapUrl_MultipleSpaceBetween_ReturnsUrl()
+        {
+            Robots.Robots robots = new Robots.Robots();
+            robots.LoadContent(@"Sitemap:   http://a.com/sitemap.xml", BASE_URL);
+
+            Assert.AreEqual("http://a.com/sitemap.xml", robots.GetSitemapUrls()[0]);
+        }
+
+        [TestMethod]
+        public void SitemapUrl_NoUrl_Returns1EntryThatIsEmtpty()
+        {
+            Robots.Robots robots = new Robots.Robots();
+            robots.LoadContent(@"Sitemap:  ", BASE_URL);
+
+            Assert.AreEqual("", robots.GetSitemapUrls()[0]);
+        }
+
+        [TestMethod]
+        public void SitemapUrl_KeywordCase_ReturnsUrl()
+        {
+            Robots.Robots robots = new Robots.Robots();
+            robots.LoadContent(@"siteMAp: http://a.com/sitemap.xml", BASE_URL);
+
+            Assert.AreEqual("http://a.com/sitemap.xml", robots.GetSitemapUrls()[0]);
+        }
+
+        [TestMethod]
+        public void SitemapUrl_SitemapPresent_ReturnsUrls()
+        {
+            IList<string> result = RobotsSitemapMultiple.GetSitemapUrls();
+
+            Assert.AreEqual("http://a.com/sitemap.xml", result[0]);
+            Assert.AreEqual("http://b.com/sitemap.xml", result[1]);
+            Assert.AreEqual("http://c.com/sitemap.xml", result[2]);
+        }
+
+        [TestMethod]
+        public void Sitemap_NoSitemapValueInRobotsDotText_ReturnEmptyCollection()
+        {
+
+            Assert.AreEqual(0, RobotsEmpty.GetSitemapUrls().Count);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Robots
 {
@@ -52,5 +53,10 @@ namespace Robots
         bool Allowed(string url, string userAgent);
         bool Allowed(Uri uri);
         bool Allowed(Uri uri, string userAgent);
+
+        int GetCrawlDelay();
+        int GetCrawlDelay(string userAgent);
+
+        IList<string> GetSitemapUrls();
     }
 }
