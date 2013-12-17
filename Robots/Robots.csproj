@@ -110,12 +110,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\TrafficBlazer.BlackWidow.Common\TrafficBlazer.BlackWidow.Common.csproj">
-      <Project>{77A9CA67-8F5D-4B64-96C5-CEB7271BF45D}</Project>
-      <Name>TrafficBlazer.BlackWidow.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
