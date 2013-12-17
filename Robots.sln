@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robots", "Robots\Robots.csproj", "{2583D0B0-9F70-4B5C-A190-673C86AF3318}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobotsTests", "RobotsTests\RobotsTests.csproj", "{4FAA1E98-061B-4B7C-9509-6BF03EE87CF8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A5A8D2A7-F654-42C6-B93E-8E51E549CF18}"
+	ProjectSection(SolutionItems) = preProject
+		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
+		Robots.vsmdi = Robots.vsmdi
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{2EF440EA-EA64-4A3A-ACE9-3EE8D6AB6C2A}"
+	ProjectSection(SolutionItems) = preProject
+		Lib\xunit.dll = Lib\xunit.dll
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/TFS13
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Robots\\Robots.csproj
+		SccProjectName1 = Robots
+		SccLocalPath1 = Robots
+		SccProjectUniqueName2 = RobotsTests\\RobotsTests.csproj
+		SccProjectName2 = RobotsTests
+		SccLocalPath2 = RobotsTests
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Robots.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2583D0B0-9F70-4B5C-A190-673C86AF3318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2583D0B0-9F70-4B5C-A190-673C86AF3318}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2583D0B0-9F70-4B5C-A190-673C86AF3318}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2583D0B0-9F70-4B5C-A190-673C86AF3318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FAA1E98-061B-4B7C-9509-6BF03EE87CF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FAA1E98-061B-4B7C-9509-6BF03EE87CF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FAA1E98-061B-4B7C-9509-6BF03EE87CF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FAA1E98-061B-4B7C-9509-6BF03EE87CF8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
