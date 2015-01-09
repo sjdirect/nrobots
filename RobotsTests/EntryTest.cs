@@ -125,6 +125,28 @@ namespace RobotsTests
         }
 
         [TestMethod]
+        public void TryParse_good_disallow_empty_Test()
+        {
+            var baseUri = new Uri("http://www.microsoft.com");
+            const string entryText = "disallow:";
+            Entry entry;
+            bool actual = Entry.TryParse(baseUri, entryText, out entry);
+            Assert.Equal(null, entry);
+            Assert.Equal(false, actual);
+        }
+
+        [TestMethod]
+        public void TryParse_good_disallow_whitespace_Test()
+        {
+            var baseUri = new Uri("http://www.microsoft.com");
+            const string entryText = "disallow:  ";
+            Entry entry;
+            bool actual = Entry.TryParse(baseUri, entryText, out entry);
+            Assert.Equal(null, entry);
+            Assert.Equal(false, actual);
+        }
+
+        [TestMethod]
         public void TryParse_good_allow_Test()
         {
             var baseUri = new Uri("http://www.microsoft.com");
