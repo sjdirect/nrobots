@@ -229,21 +229,21 @@ Disallow: /bbb
         public void Disallow_root_all_robots_out_content_Test()
         {
             bool actual = RobotsEmpty.Allowed(BASE_URL + "/");
-            Assert.AreEqual(false, actual);
+            Assert.AreEqual(true, actual);
         }
 
         [TestMethod]
         public void Disallow_folder_all_robots_out_content_Test()
         {
             bool actual = RobotsEmpty.Allowed(BASE_URL + "/folder");
-            Assert.AreEqual(false, actual);
+            Assert.AreEqual(true, actual);
         }
 
         [TestMethod]
         public void Disallow_file_all_robots_out_content_Test()
         {
             bool actual = RobotsEmpty.Allowed(BASE_URL + "/folder/file.txt");
-            Assert.AreEqual(false, actual);
+            Assert.AreEqual(true, actual);
         }
 
         [TestMethod]
@@ -330,7 +330,7 @@ Disallow: /bbb
             Assert.AreEqual(false, actual);
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]//No longer valid, bing doesn't have these entries
         public void Uri_loaded_disallow_subfolder_Test()
         {
             Assert.AreEqual(false, RobotsUrl.Allowed("/cashback/admin"));
