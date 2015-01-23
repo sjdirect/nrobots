@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Robots.Model;
 
 namespace Robots
@@ -320,7 +321,7 @@ namespace Robots
             //if (!IsInternalToDomain(uri))
             //    return true;
 
-            string[] uriParts = uri.LocalPath.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] uriParts = uri.PathAndQuery.Split(new[] {'/', '?'}, StringSplitOptions.RemoveEmptyEntries);
             foreach (var allowEntry in userAgentEntry.AllowEntries)
             {
                 bool result;
@@ -336,7 +337,7 @@ namespace Robots
         private static bool CheckAllowedEntry(AllowEntry entry, string[] uriParts, out bool allow)
         {
             allow = true;
-            string[] robotInstructionUriParts = entry.Url.LocalPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] robotInstructionUriParts = entry.Url.PathAndQuery.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (robotInstructionUriParts.Length > uriParts.Length)
                 return false;
@@ -361,7 +362,7 @@ namespace Robots
         private static bool CheckDisallowedEntry(DisallowEntry entry, string[] uriParts, out bool allow)
         {
             allow = true;
-            string[] robotInstructionUriParts = entry.Url.LocalPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] robotInstructionUriParts = entry.Url.PathAndQuery.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (robotInstructionUriParts.Length > uriParts.Length)
                 return false;

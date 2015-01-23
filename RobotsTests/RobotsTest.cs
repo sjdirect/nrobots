@@ -21,6 +21,7 @@ namespace RobotsTests
         private static Robots.Robots _robotsSitemap;
         private static Robots.Robots _robotsSitemapMultiple;
         private static Robots.Robots _robotsGroupedUserAgents;
+        private static Robots.Robots _robotsContentWithQuerystringOnRoot;
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -177,6 +178,26 @@ Disallow: /bbb
             }
         }
 
+        private static Robots.Robots RobotsContentWithQuerystringOnRoot
+        {
+            get
+            {
+                if (_robotsContentWithQuerystringOnRoot == null)
+                {
+                    _robotsContentWithQuerystringOnRoot = new Robots.Robots();
+                    _robotsContentWithQuerystringOnRoot.LoadContent(
+        @"User-Agent: *
+Disallow: /?category=whatever
+Disallow: /?category=another&color=red
+",
+                        BASE_URL
+                        );
+                }
+                return _robotsContentWithQuerystringOnRoot;
+            }
+        }
+
+
         #region Additional test attributes
         // 
         //You can use the following additional attributes as you write your tests:
@@ -273,6 +294,25 @@ Disallow: /bbb
             Assert.IsTrue(RobotsGroupedUserAgents.Allowed(BASE_URL + "/aaa", "slurp"));
             Assert.IsTrue(RobotsGroupedUserAgents.Allowed(BASE_URL + "/aaa", "blahblah")); 
         }
+
+        [TestMethod]
+        public void Disallow_querystring_on_root_allows_root_Test()
+        {
+            Assert.IsTrue(RobotsContentWithQuerystringOnRoot.Allowed(BASE_URL, "googlebot"));
+        }
+
+        [TestMethod]
+        public void Disallow_querystring_exact_match_not_supported_Test()
+        {
+            Assert.IsTrue(RobotsContentWithQuerystringOnRoot.Allowed(BASE_URL + "?category=whatever", "googlebot"));
+        }
+
+        [TestMethod]
+        public void Disallow_querystring_nonexact_match_not_supported_Test()
+        {
+            Assert.IsTrue(RobotsContentWithQuerystringOnRoot.Allowed(BASE_URL + "?category=another&blah=blah", "googlebot"));
+        }
+
 
         [TestMethod]
         public void Allow_subfolder_wildcard_content_Test()
