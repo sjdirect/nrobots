@@ -1,6 +1,8 @@
 NRobots.txt
 ====
 
+![alt text](https://ci.appveyor.com/api/projects/status/u7j3d0fn580e8o8y?svg=true "Build Status")
+
 A robots.txt parser written in c#.
 
 This is an unofficial fork of NRobots.txt on codeplex with extended functionality. For full documentation see https://nrobots.codeplex.com/.
