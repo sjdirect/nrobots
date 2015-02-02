@@ -100,8 +100,8 @@ namespace Robots.Model
                     bool inverted = entryText.EndsWith("$");
                     string value = entryText.Substring(DISALLOW_KEYWORD.Length).Trim().TrimEnd('?');
 
-                    Uri url;
-                    if (Uri.TryCreate(baseUri, value, out url))
+                    Uri url = null;
+                    if (!string.IsNullOrEmpty(value) && Uri.TryCreate(baseUri, value, out url))
                     {
                         entry = CreateEntry(type);
                         entry.Comment = comment;
