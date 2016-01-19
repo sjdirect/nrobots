@@ -367,6 +367,8 @@ namespace Robots
             if (robotInstructionUriParts.Length > uriParts.Length)
                 return false;
 
+            bool lastPartIsComplete = entry.Url.PathAndQuery.EndsWith("/");
+
             int end = Math.Min(robotInstructionUriParts.Length, uriParts.Length);
             bool mismatch = false;
             for (int i = 0; i < end; i++)
@@ -377,7 +379,10 @@ namespace Robots
                     index1 = robotInstructionUriParts.Length - i - 1;
                     index2 = uriParts.Length - i - 1;
                 }
-                if (IsMismatch(robotInstructionUriParts[index1], uriParts[index2]))
+
+                bool partIsComplete = i < end - 1 || lastPartIsComplete;
+
+                if (IsMismatch(robotInstructionUriParts[index1], uriParts[index2], partIsComplete))
                 {
                     mismatch = true;
                     break;
@@ -392,13 +397,13 @@ namespace Robots
             return false;
         }
 
-        private static bool IsMismatch(string regsiteredPart, string testedPart)
+        private static bool IsMismatch(string regsiteredPart, string testedPart, bool partIsComplete)
         {
             if (string.Compare("*", regsiteredPart, true) == 0)
                 return false;
             if (string.Compare(testedPart, regsiteredPart, true) == 0)
                 return false;
-            if (testedPart.StartsWith(regsiteredPart, StringComparison.InvariantCultureIgnoreCase))
+            if (!partIsComplete && testedPart.StartsWith(regsiteredPart, StringComparison.InvariantCultureIgnoreCase))
                 return false;
 
             return true;

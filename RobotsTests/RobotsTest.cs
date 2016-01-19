@@ -41,6 +41,7 @@ namespace RobotsTests
 Disallow: /disallowedfile.txt
 Disallow: /disallowedfolder
 Disallow: /disallowedfolder/subfolder
+Disallow: /disallowedcompletefolder/
 Allow: /allowedfile2.txt
 Allow: /allowedfolder",
                         BASE_URL
@@ -340,6 +341,20 @@ Disallow: /?category=another&color=red
         {
             bool actual = RobotsContent.Allowed(BASE_URL + "/disallowedfolder");
             Assert.AreEqual(false, actual);
+        }
+        
+        [TestMethod]
+        public void Explicit_disallowed_complete_folder_Test()
+        {
+            bool actual = RobotsContent.Allowed(BASE_URL + "/disallowedcompletefolder");
+            Assert.AreEqual(false, actual);
+        }
+        
+        [TestMethod]
+        public void Explicit_disallowed_complete_folder_Test_different_folder()
+        {
+            bool actual = RobotsContent.Allowed(BASE_URL + "/disallowedcompletefolderwithmoretext");
+            Assert.AreEqual(true, actual);
         }
 
         [TestMethod]
