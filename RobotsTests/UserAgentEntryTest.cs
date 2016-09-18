@@ -1,6 +1,6 @@
-﻿using Robots.Model;
+﻿using System.Linq;
+using Robots.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Assert = Xunit.Assert;
 
 namespace RobotsTests
 {
@@ -54,14 +54,14 @@ namespace RobotsTests
         public void EntryType_Test()
         {
             var target = new UserAgentEntry();
-            Assert.Equal(EntryType.UserAgent, target.Type);
+            Assert.AreEqual(EntryType.UserAgent, target.Type);
         }
 
         [TestMethod]
         public void Create_UserAgent_Test()
         {
             var target = Entry.CreateEntry(EntryType.UserAgent);
-            Assert.Equal(EntryType.UserAgent, target.Type);
+            Assert.AreEqual(EntryType.UserAgent, target.Type);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace RobotsTests
         public void EntriesTest()
         {
             var target = new UserAgentEntry();
-            Assert.Empty(target.Entries);
+            Assert.AreEqual(0, target.Entries.Count());
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace RobotsTests
         public void DisallowEntriesTest()
         {
             var target = new UserAgentEntry();
-            Assert.Empty(target.DisallowEntries);
+            Assert.AreEqual(0, target.DisallowEntries.Count());
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace RobotsTests
         public void AllowEntriesTest()
         {
             var target = new UserAgentEntry();
-            Assert.Empty(target.AllowEntries);
+            Assert.AreEqual(0, target.AllowEntries.Count());
         }
 
         [TestMethod]
@@ -100,9 +100,9 @@ namespace RobotsTests
             var target = new UserAgentEntry();
             Entry entry = new CommentEntry();
             target.AddEntry(entry);
-            Assert.NotEmpty(target.Entries);
-            Assert.Empty(target.AllowEntries);
-            Assert.Empty(target.DisallowEntries);
+            Assert.AreNotEqual(0, target.Entries.Count());
+            Assert.AreEqual(0, target.AllowEntries.Count());
+            Assert.AreEqual(0, target.DisallowEntries.Count());
         }
 
         [TestMethod]
@@ -111,9 +111,9 @@ namespace RobotsTests
             var target = new UserAgentEntry();
             Entry entry = new AllowEntry();
             target.AddEntry(entry);
-            Assert.NotEmpty(target.Entries);
-            Assert.NotEmpty(target.AllowEntries);
-            Assert.Empty(target.DisallowEntries);
+            Assert.AreNotEqual(0, target.Entries.Count());
+            Assert.AreNotEqual(0, target.AllowEntries.Count());
+            Assert.AreEqual(0, target.DisallowEntries.Count());
         }
 
         [TestMethod]
@@ -122,9 +122,9 @@ namespace RobotsTests
             var target = new UserAgentEntry();
             Entry entry = new CommentEntry();
             target.AddEntry(entry);
-            Assert.NotEmpty(target.Entries);
-            Assert.Empty(target.AllowEntries);
-            Assert.Empty(target.DisallowEntries);
+            Assert.AreNotEqual(0, target.Entries.Count());
+            Assert.AreEqual(0, target.AllowEntries.Count());
+            Assert.AreEqual(0, target.DisallowEntries.Count());
         }
 
     }

@@ -1,0 +1,34 @@
+{
+  "name": "NRobotsCore",
+  "version": "1.1.0-*",
+  "authors": [ "Steven Jones", "Kemy" ],
+  "copyright": "Copyright 2013",
+  "description": ".NET Core port of sjdirect/nrobots. A robots.txt parser written in c#. This is an unofficial fork of NRobots.txt on codeplex with extended functionality. For full documentation see https://nrobots.codeplex.com/.",
+
+  "dependencies": {
+  },
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+      }
+    },
+    "netcoreapp1.0": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "Microsoft.NETCore.App": "1.0.1"
+      }
+    }
+  },
+  "runtimes": {
+  },
+  "buildOptions": {
+  },
+  "packOptions": {
+    "owners": [ "Steven Jones", "Kemy" ],
+    "requireLicenseAcceptance": false,
+    "tags": [ "utilities", "common" ],
+    "summary": "A robots.txt parser written in c#.",
+    "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+    "projectUrl": "https://github.com/sjdirect/nrobots"
+  }
+}
