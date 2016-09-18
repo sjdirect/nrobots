@@ -164,7 +164,7 @@ namespace Robots.Model
                     return false;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 entry = null;
                 return false;
