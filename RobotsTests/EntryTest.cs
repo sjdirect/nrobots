@@ -173,11 +173,13 @@ namespace RobotsTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void TryParse_null_base_uri_Test()
         {
-            Entry entry;
-            Entry.TryParse(null, "", out entry);
+            Assert.ThrowsException<ArgumentNullException>(() =>
+            {
+                Entry entry;
+                Entry.TryParse(null, "", out entry);
+            });
         }
 
         [TestMethod]

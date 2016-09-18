@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Robots.Model;
 
 namespace Robots
@@ -37,15 +36,15 @@ namespace Robots
         /// Load the robots.txt from a web resource
         /// </summary>
         /// <param name="robotsUri">The Uri of the web resource</param>
-        public void Load(Uri robotsUri)
+        public async void Load(Uri robotsUri)
         {
             var uriBuilder = new UriBuilder(robotsUri) { Path = "/robots.txt" };
             var req = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(uriBuilder.Uri);
             
-            using (var webresponse = req.GetResponse())
+            using (var webresponse = await req.GetResponseAsync())
             using (var responseStream = webresponse.GetResponseStream())
             {
-                string baseUrl = webresponse.ResponseUri.GetLeftPart(UriPartial.Authority);
+                string baseUrl = string.Concat(webresponse.ResponseUri.Scheme, "://", webresponse.ResponseUri.Host);
                 Load(responseStream, baseUrl);
             }
         }
@@ -97,14 +96,10 @@ namespace Robots
         {
             if (fileContent == null)
                 throw new ArgumentNullException("fileContent");
-            var sr = new StringReader(fileContent);
-            try
+            
+            using(var sr = new StringReader(fileContent))
             {
                 Load(sr, baseUri);
-            }
-            finally
-            {
-                sr.Close();
             }
         }
 
@@ -403,7 +398,7 @@ namespace Robots
                 return false;
             if (string.Compare(testedPart, regsiteredPart, true) == 0)
                 return false;
-            if (!partIsComplete && testedPart.StartsWith(regsiteredPart, StringComparison.InvariantCultureIgnoreCase))
+            if (!partIsComplete && testedPart.StartsWith(regsiteredPart, StringComparison.OrdinalIgnoreCase))
                 return false;
 
             return true;

@@ -1,0 +1,22 @@
+{
+  "testRunner": "mstest",
+
+  "version": "1.0.0-*",
+  "dependencies": {
+    "dotnet-test-mstest": "1.0.1-preview",
+    "MSTest.TestFramework": "1.0.0-preview",
+    "Microsoft.AspNetCore.Http": "1.0.0",
+    "System.Runtime": "4.1.0",
+    "Robots": "1.1.0-*"
+  },
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+      }
+    }
+  },
+  "runtimes": {
+  },
+  "buildOptions": {
+  }
+}
