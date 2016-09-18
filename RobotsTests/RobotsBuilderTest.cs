@@ -1,7 +1,6 @@
 ﻿using Robots.Fluent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Assert = Xunit.Assert;
 
 namespace RobotsTests
 {
@@ -72,17 +71,15 @@ namespace RobotsTests
 
                 .Robots;
 
-            Assert.NotNull(robots);
-            Assert.Equal(false, robots.Allowed("/web", "bot1"));
-            Assert.Equal(false, robots.Allowed("/web/allowed", "bot1"));
-            Assert.Equal(true, robots.Allowed("/web/page1.aspx", "bot1"));
-            
-            Assert.Equal(false, robots.Allowed("/", "bot2"));
-            Assert.Equal(false, robots.Allowed("/page.aspx", "bot2"));
-            
-            Assert.Equal(false, robots.Allowed("/blocked"));
-            Assert.Equal(false, robots.Allowed("/blocked", "*"));
-            Assert.Equal(true, robots.Allowed("/notblocked"));
+            Assert.IsNotNull(robots);
+            Assert.AreEqual(false, robots.Allowed("/web", "bot1"));
+            Assert.AreEqual(false, robots.Allowed("/web/allowed", "bot1"));
+            Assert.AreEqual(true, robots.Allowed("/web/page1.aspx", "bot1"));
+            Assert.AreEqual(false, robots.Allowed("/", "bot2"));
+            Assert.AreEqual(false, robots.Allowed("/page.aspx", "bot2"));
+            Assert.AreEqual(false, robots.Allowed("/blocked"));
+            Assert.AreEqual(false, robots.Allowed("/blocked", "*"));
+            Assert.AreEqual(true, robots.Allowed("/notblocked"));
         }
     }
 }
