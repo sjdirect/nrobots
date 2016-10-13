@@ -1,21 +1,13 @@
 ﻿using Robots.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 namespace RobotsTests
 {
-
-
     /// <summary>
     ///This is a test class for AllowEntryTest and is intended
     ///to contain all AllowEntryTest Unit Tests
     ///</summary>
-    [TestClass]
     public class AllowEntryTest
     {
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext { get; set; }
 
         #region Additional test attributes
         // 
@@ -48,18 +40,18 @@ namespace RobotsTests
         #endregion
 
 
-        [TestMethod]
+        [Fact]
         public void EntryType_Test()
         {
             var target = new AllowEntry();
-            Assert.AreEqual(EntryType.Allow, target.Type);
+            Assert.Equal(EntryType.Allow, target.Type);
         }
 
-        [TestMethod]
+        [Fact]
         public void Create_AllowEntry_Test()
         {
             var target = Entry.CreateEntry(EntryType.Allow);
-            Assert.AreEqual(EntryType.Allow, target.Type);
+            Assert.Equal(EntryType.Allow, target.Type);
         }
 
     }

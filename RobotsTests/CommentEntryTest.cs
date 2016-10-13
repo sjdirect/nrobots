@@ -1,5 +1,5 @@
 ﻿using Robots.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 namespace RobotsTests
 {
     
@@ -8,29 +8,8 @@ namespace RobotsTests
     ///This is a test class for CommentEntryTest and is intended
     ///to contain all CommentEntryTest Unit Tests
     ///</summary>
-    [TestClass()]
     public class CommentEntryTest
     {
-
-
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
         #region Additional test attributes
         // 
         //You can use the following additional attributes as you write your tests:
@@ -62,18 +41,18 @@ namespace RobotsTests
         #endregion
 
 
-        [TestMethod]
+        [Fact]
         public void EntryType_Test()
         {
             var target = new CommentEntry();
-            Assert.AreEqual(EntryType.Comment, target.Type);
+            Assert.Equal(EntryType.Comment, target.Type);
         }
 
-        [TestMethod]
+        [Fact]
         public void Create_CommentEntry_Test()
         {
             var target = Entry.CreateEntry(EntryType.Comment);
-            Assert.AreEqual(EntryType.Comment, target.Type);
+            Assert.Equal(EntryType.Comment, target.Type);
         }
     }
 }
