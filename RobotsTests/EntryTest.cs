@@ -1,7 +1,6 @@
 ﻿using Robots.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Assert = Xunit.Assert;
+using Xunit;
 
 namespace RobotsTests
 {
@@ -11,15 +10,8 @@ namespace RobotsTests
     ///This is a test class for EntryTest and is intended
     ///to contain all EntryTest Unit Tests
     ///</summary>
-    [TestClass]
     public class EntryTest
     {
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext { get; set; }
-
         #region Additional test attributes
         // 
         //You can use the following additional attributes as you write your tests:
@@ -51,7 +43,7 @@ namespace RobotsTests
         #endregion
 
 
-        [TestMethod]
+        [Fact]
         public void CommentTest()
         {
             Entry target = new UserAgentEntry(); // TODO: Initialize to an appropriate value
@@ -61,7 +53,7 @@ namespace RobotsTests
             Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void HasCommentTest()
         {
             Entry target = new UserAgentEntry(); // TODO: Initialize to an appropriate value
@@ -69,7 +61,7 @@ namespace RobotsTests
             Assert.Equal(false, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void HasCommentTest2()
         {
             Entry target = new UserAgentEntry {Comment = "comment"};
@@ -85,7 +77,7 @@ namespace RobotsTests
         }
 
 
-        [TestMethod]
+        [Fact]
         public void TryParse_good_UserAgent_Test()
         {
             var baseUri = new Uri("http://www.microsoft.com");
@@ -98,7 +90,7 @@ namespace RobotsTests
             Assert.Equal("*", ((UserAgentEntry)entry).UserAgent);
         }
 
-        [TestMethod]
+        [Fact]
         public void TryParse_empty_UserAgent_Test()
         {
             var baseUri = new Uri("http://www.microsoft.com");
@@ -109,7 +101,7 @@ namespace RobotsTests
             Assert.Equal(false, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void TryParse_good_disallow_Test()
         {
             var baseUri = new Uri("http://www.microsoft.com");
@@ -124,7 +116,7 @@ namespace RobotsTests
             Assert.Equal("comment", entry.Comment);
         }
 
-        [TestMethod]
+        [Fact]
         public void TryParse_good_disallow_empty_Test()
         {
             var baseUri = new Uri("http://www.microsoft.com");
@@ -135,7 +127,7 @@ namespace RobotsTests
             Assert.Equal(false, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void TryParse_good_disallow_whitespace_Test()
         {
             var baseUri = new Uri("http://www.microsoft.com");
@@ -146,7 +138,7 @@ namespace RobotsTests
             Assert.Equal(false, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void TryParse_good_allow_Test()
         {
             var baseUri = new Uri("http://www.microsoft.com");
@@ -160,7 +152,7 @@ namespace RobotsTests
             Assert.Equal("/web", ((AllowEntry)entry).Url.LocalPath);
         }
 
-        [TestMethod]
+        [Fact]
         public void TryParse_comment_allow_Test()
         {
             var baseUri = new Uri("http://www.microsoft.com");
@@ -173,15 +165,14 @@ namespace RobotsTests
             Assert.Equal("comment", entry.Comment);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void TryParse_null_base_uri_Test()
         {
             Entry entry;
-            Entry.TryParse(null, "", out entry);
+            Assert.Throws<ArgumentNullException>(()=>Entry.TryParse(null, "", out entry));
         }
 
-        [TestMethod]
+        [Fact]
         public void TryParse_empty_string_Test()
         {
             var baseUri = new Uri("http://www.microsoft.com");

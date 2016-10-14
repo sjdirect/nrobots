@@ -1,5 +1,5 @@
 ﻿using Robots.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 namespace RobotsTests
 {
     
@@ -8,29 +8,8 @@ namespace RobotsTests
     ///This is a test class for DisallowEntryTest and is intended
     ///to contain all DisallowEntryTest Unit Tests
     ///</summary>
-    [TestClass()]
     public class DisallowEntryTest
     {
-
-
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
         #region Additional test attributes
         // 
         //You can use the following additional attributes as you write your tests:
@@ -62,18 +41,18 @@ namespace RobotsTests
         #endregion
 
 
-        [TestMethod]
+        [Fact]
         public void EntryType_Test()
         {
             var target = new DisallowEntry();
-            Assert.AreEqual(EntryType.Disallow, target.Type);
+            Assert.Equal(EntryType.Disallow, target.Type);
         }
 
-        [TestMethod]
+        [Fact]
         public void Create_DisallowEntry_Test()
         {
             var target = Entry.CreateEntry(EntryType.Disallow);
-            Assert.AreEqual(EntryType.Disallow, target.Type);
+            Assert.Equal(EntryType.Disallow, target.Type);
         }
 
     }

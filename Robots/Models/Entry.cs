@@ -77,7 +77,7 @@ namespace Robots.Model
             }
             try
             {
-                if (entryText.StartsWith(USER_AGENT_KEYWORD, true, CultureInfo.InvariantCulture))
+                if (entryText.StartsWith(USER_AGENT_KEYWORD, StringComparison.OrdinalIgnoreCase))
                 {
                     type = EntryType.UserAgent;
                     entry = CreateEntry(type);
@@ -94,7 +94,7 @@ namespace Robots.Model
                          ((UserAgentEntry) entry).UserAgent = userAgent;
                     }
                 }
-                else if (entryText.StartsWith(DISALLOW_KEYWORD, true, CultureInfo.InvariantCulture))
+                else if (entryText.StartsWith(DISALLOW_KEYWORD, StringComparison.OrdinalIgnoreCase))
                 {
                     type = EntryType.Disallow;
                     bool inverted = entryText.EndsWith("$");
@@ -109,7 +109,7 @@ namespace Robots.Model
                         ((UrlEntry)entry).Inverted = inverted;
                     }
                 }
-                else if (entryText.StartsWith(ALLOW_KEYWORD, true, CultureInfo.InvariantCulture))
+                else if (entryText.StartsWith(ALLOW_KEYWORD, StringComparison.OrdinalIgnoreCase))
                 {
                     type = EntryType.Allow;
                     bool inverted = entryText.EndsWith("$");
@@ -124,7 +124,7 @@ namespace Robots.Model
                         ((UrlEntry)entry).Inverted = inverted;
                     }
                 }
-                else if (entryText.StartsWith(CRAWL_DELAY_KEYWORD, true, CultureInfo.InvariantCulture))
+                else if (entryText.StartsWith(CRAWL_DELAY_KEYWORD, StringComparison.OrdinalIgnoreCase))
                 {
                     type = EntryType.CrawlDelay;
                     string value = entryText.Substring(CRAWL_DELAY_KEYWORD.Length).Trim().TrimEnd('?');
@@ -141,7 +141,7 @@ namespace Robots.Model
                         ((CrawlDelayEntry)entry).CrawlDelay = 0;
                     }
                 }
-                else if (entryText.StartsWith(SITEMAP_KEYWORD, true, CultureInfo.InvariantCulture))
+                else if (entryText.StartsWith(SITEMAP_KEYWORD, StringComparison.OrdinalIgnoreCase))
                 {
                     type = EntryType.Sitemap;
                     string value = entryText.Substring(SITEMAP_KEYWORD.Length).Trim().TrimEnd('?');

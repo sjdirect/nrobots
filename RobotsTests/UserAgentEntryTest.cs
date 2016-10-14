@@ -1,24 +1,14 @@
 ﻿using Robots.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Assert = Xunit.Assert;
+using  Xunit;
 
 namespace RobotsTests
-{
-    
-    
+{ 
     /// <summary>
     ///This is a test class for UserAgentEntryTest and is intended
     ///to contain all UserAgentEntryTest Unit Tests
     ///</summary>
-    [TestClass]
     public class UserAgentEntryTest
     {
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext { get; set; }
-
         #region Additional test attributes
         // 
         //You can use the following additional attributes as you write your tests:
@@ -50,14 +40,14 @@ namespace RobotsTests
         #endregion
 
 
-        [TestMethod]
+        [Fact]
         public void EntryType_Test()
         {
             var target = new UserAgentEntry();
             Assert.Equal(EntryType.UserAgent, target.Type);
         }
 
-        [TestMethod]
+        [Fact]
         public void Create_UserAgent_Test()
         {
             var target = Entry.CreateEntry(EntryType.UserAgent);
@@ -67,7 +57,7 @@ namespace RobotsTests
         /// <summary>
         ///A test for Entries
         ///</summary>
-        [TestMethod]
+        [Fact]
         public void EntriesTest()
         {
             var target = new UserAgentEntry();
@@ -77,7 +67,7 @@ namespace RobotsTests
         /// <summary>
         ///A test for DisallowEntries
         ///</summary>
-        [TestMethod]
+        [Fact]
         public void DisallowEntriesTest()
         {
             var target = new UserAgentEntry();
@@ -87,14 +77,14 @@ namespace RobotsTests
         /// <summary>
         ///A test for AllowEntries
         ///</summary>
-        [TestMethod]
+        [Fact]
         public void AllowEntriesTest()
         {
             var target = new UserAgentEntry();
             Assert.Empty(target.AllowEntries);
         }
 
-        [TestMethod]
+        [Fact]
         public void Add_comment_Test()
         {
             var target = new UserAgentEntry();
@@ -105,7 +95,7 @@ namespace RobotsTests
             Assert.Empty(target.DisallowEntries);
         }
 
-        [TestMethod]
+        [Fact]
         public void Add_allow_entry_Test()
         {
             var target = new UserAgentEntry();
@@ -116,7 +106,7 @@ namespace RobotsTests
             Assert.Empty(target.DisallowEntries);
         }
 
-        [TestMethod]
+        [Fact]
         public void Add_disallow_entry_Test()
         {
             var target = new UserAgentEntry();

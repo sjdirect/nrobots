@@ -1,0 +1,33 @@
+﻿{
+  "version": "1.0.9",
+  "title": "NRobotsPatched ",
+  "copyright": "Copyright 2016",
+  "description": "A robots.txt parser written in c#. This is an unofficial fork of NRobots.txt on codeplex with extended functionality. For full documentation see https://nrobots.codeplex.com/.",
+  "authors": [ "Steven Jones", "Xaver Schulz" ],
+  "packOptions": {
+    "summary": "A robots.txt parser written in C#.",
+    "owners": [ "sjdirect" ],
+    "tags": [ "utilities", "common" ],
+    "projectUrl": "https://github.com/sjdirect/nrobots",
+    "licenseUrl": "https://raw.githubusercontent.com/sjdirect/nrobots/master/License.txt",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/sjdirect/nrobots"
+    }
+  },
+  
+  "frameworks": {
+    "NET40": {},
+    "NET451": {},
+    "netstandard1.1": {
+      "imports": "dnxcore50",
+      "buildOptions": {
+        "define": [ "COREFX" ]
+      },
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "System.Net.Requests": "4.0.11"
+      }
+    }
+  }
+}

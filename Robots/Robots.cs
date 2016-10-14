@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using Robots.Model;
 
 namespace Robots
@@ -40,12 +41,16 @@ namespace Robots
         public void Load(Uri robotsUri)
         {
             var uriBuilder = new UriBuilder(robotsUri) { Path = "/robots.txt" };
-            var req = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(uriBuilder.Uri);
-            
+            var req = (HttpWebRequest)WebRequest.Create(uriBuilder.Uri);
+#if COREFX            
+            using (var webresponse = req.GetResponseAsync().Result)
+#else
             using (var webresponse = req.GetResponse())
+#endif
+
             using (var responseStream = webresponse.GetResponseStream())
             {
-                string baseUrl = webresponse.ResponseUri.GetLeftPart(UriPartial.Authority);
+                string baseUrl = webresponse.ResponseUri.GetComponents((UriComponents.Scheme | UriComponents.UserInfo | UriComponents.Host | UriComponents.Port), UriFormat.UriEscaped);
                 Load(responseStream, baseUrl);
             }
         }
@@ -60,7 +65,7 @@ namespace Robots
             Uri baseUri;
             if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out baseUri))
                 throw new ArgumentException("Invalid Url", "baseUrl");
-            
+
             Load(new StreamReader(stream), baseUri);
         }
 
@@ -97,14 +102,9 @@ namespace Robots
         {
             if (fileContent == null)
                 throw new ArgumentNullException("fileContent");
-            var sr = new StringReader(fileContent);
-            try
+            using (var sr = new StringReader(fileContent))
             {
                 Load(sr, baseUri);
-            }
-            finally
-            {
-                sr.Close();
             }
         }
 
@@ -143,7 +143,7 @@ namespace Robots
                         userAgentsGroup.Clear();
                         addedEntriesToUserAgent = false;
                     }
-                    
+
                     UserAgentEntry foundUserAgentEntry = FindExplicitUserAgentEntry(userAgentEntry.UserAgent);
                     if (foundUserAgentEntry == null)
                     {
@@ -179,9 +179,9 @@ namespace Robots
 
         }
 
-        #endregion
+#endregion
 
-        #region Methods: Allow
+#region Methods: Allow
 
         public bool Allowed(string url)
         {
@@ -233,9 +233,9 @@ namespace Robots
             return true;
         }
 
-        #endregion
+#endregion
 
-        #region Methods: Crawl-Delay
+#region Methods: Crawl-Delay
 
         public int GetCrawlDelay()
         {
@@ -258,26 +258,26 @@ namespace Robots
             return crawlDelay;
         }
 
-        #endregion
+#endregion
 
-        #region Sitemap
+#region Sitemap
 
         public IList<string> GetSitemapUrls()
         {
             List<string> sitemapUrls = new List<string>();
 
-            foreach(Entry sitemapEntry in _entries)
+            foreach (Entry sitemapEntry in _entries)
             {
-                if ( (sitemapEntry is SitemapEntry) && (sitemapEntry != null) )
+                if ((sitemapEntry is SitemapEntry) && (sitemapEntry != null))
                     sitemapUrls.Add(((SitemapEntry)sitemapEntry).SitemapUrl);
             }
-            
+
             return sitemapUrls;
         }
 
-        #endregion
+#endregion
 
-        #region Private methods
+#region Private methods
 
         private UserAgentEntry FindUserAgentEntry(string userAgent)
         {
@@ -288,9 +288,9 @@ namespace Robots
                 if (userAgentEntry == null || userAgentEntry.Type != EntryType.UserAgent)
                     continue;
 
-                if (string.Compare(userAgentEntry.UserAgent, userAgent, true) == 0)
+                if (string.Compare(userAgentEntry.UserAgent, userAgent, StringComparison.OrdinalIgnoreCase) == 0)
                     return userAgentEntry;
-                if (string.Compare(userAgentEntry.UserAgent, UserAgents.AllAgents, true) == 0)
+                if (string.Compare(userAgentEntry.UserAgent, UserAgents.AllAgents, StringComparison.OrdinalIgnoreCase) == 0)
                     allAgentsEntry = userAgentEntry;
             }
 
@@ -306,7 +306,7 @@ namespace Robots
                 if (userAgentEntry == null || userAgentEntry.Type != EntryType.UserAgent)
                     continue;
 
-                if (string.Compare(userAgentEntry.UserAgent, userAgent, true) == 0)
+                if (string.Compare(userAgentEntry.UserAgent, userAgent, StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     targetEntry = userAgentEntry;
                     break;
@@ -321,7 +321,7 @@ namespace Robots
             //if (!IsInternalToDomain(uri))
             //    return true;
 
-            string[] uriParts = uri.PathAndQuery.Split(new[] {'/', '?'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] uriParts = uri.PathAndQuery.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var allowEntry in userAgentEntry.AllowEntries)
             {
                 bool result;
@@ -345,7 +345,7 @@ namespace Robots
             bool mismatch = false;
             for (int i = 0; i < Math.Min(robotInstructionUriParts.Length, uriParts.Length); i++)
             {
-                if (string.Compare(uriParts[i], robotInstructionUriParts[i], true) != 0)
+                if (string.Compare(uriParts[i], robotInstructionUriParts[i], StringComparison.OrdinalIgnoreCase) != 0)
                 {
                     mismatch = true;
                     break;
@@ -399,21 +399,21 @@ namespace Robots
 
         private static bool IsMismatch(string regsiteredPart, string testedPart, bool partIsComplete)
         {
-            if (string.Compare("*", regsiteredPart, true) == 0)
+            if (string.Compare("*", regsiteredPart, StringComparison.OrdinalIgnoreCase) == 0)
                 return false;
-            if (string.Compare(testedPart, regsiteredPart, true) == 0)
+            if (string.Compare(testedPart, regsiteredPart, StringComparison.OrdinalIgnoreCase) == 0)
                 return false;
-            if (!partIsComplete && testedPart.StartsWith(regsiteredPart, StringComparison.InvariantCultureIgnoreCase))
+            if (!partIsComplete && testedPart.StartsWith(regsiteredPart, StringComparison.OrdinalIgnoreCase))
                 return false;
 
             return true;
         }
 
-        #endregion
+#endregion
 
         internal void AddEntry(Entry entry)
         {
-            if (entry ==  null)
+            if (entry == null)
                 throw new ArgumentNullException("entry");
             if (entry.Type != EntryType.Comment && entry.Type != EntryType.UserAgent)
                 throw new ArgumentException("Only Comments and User-Agent entries can be added", "entry");

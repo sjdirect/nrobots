@@ -1,7 +1,6 @@
 ﻿using Robots.Model;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Assert = Xunit.Assert;
+using  Xunit;
 
 namespace RobotsTests
 {
@@ -11,15 +10,8 @@ namespace RobotsTests
     ///This is a test class for UrlEntryTest and is intended
     ///to contain all UrlEntryTest Unit Tests
     ///</summary>
-    [TestClass]
     public class UrlEntryTest
     {
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext { get; set; }
-
         #region Additional test attributes
         // 
         //You can use the following additional attributes as you write your tests:
@@ -50,11 +42,10 @@ namespace RobotsTests
         //
         #endregion
 
-
         /// <summary>
         ///A test for Url
         ///</summary>
-        [TestMethod]
+        [Fact]
         public void UrlTest()
         {
             UrlEntry target = CreateUrlEntry(); // TODO: Initialize to an appropriate value
@@ -73,7 +64,7 @@ namespace RobotsTests
         /// <summary>
         ///A test for Inverted
         ///</summary>
-        [TestMethod]
+        [Fact]
         public void InvertedTest()
         {
             UrlEntry target = CreateUrlEntry(); // TODO: Initialize to an appropriate value
