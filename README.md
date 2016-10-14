@@ -3,7 +3,7 @@ NRobots.txt [![Build Status](https://ci.appveyor.com/api/projects/status/u7j3d0f
 
 A robots.txt parser written in c#.
 
-This is an unofficial fork of NRobots.txt on codeplex with extended functionality. For full documentation see https://nrobots.codeplex.com/.
+This is an unofficial & unsupported fork of NRobots.txt on codeplex with extended functionality. For full documentation see https://nrobots.codeplex.com/.
 
 ## Project Description:
 The Robots Exclusion Protocol or robots.txt protocol, is a convention to prevent cooperating web spiders and other web robots from accessing all or part of a website which is otherwise publicly viewable. 
