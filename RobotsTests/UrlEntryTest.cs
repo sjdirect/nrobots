@@ -1,7 +1,6 @@
 ﻿using Robots.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Assert = Xunit.Assert;
 
 namespace RobotsTests
 {
@@ -61,7 +60,7 @@ namespace RobotsTests
             var expected = new Uri("http://www.microsoft.com");
             target.Url = expected;
             Uri actual = target.Url;
-            Assert.Equal(expected, actual);
+            Assert.AreEqual(expected, actual);
        }
 
         internal virtual UrlEntry CreateUrlEntry()
@@ -80,7 +79,7 @@ namespace RobotsTests
             const bool expected = true;
             target.Inverted = expected;
             bool actual = target.Inverted;
-            Assert.Equal(expected, actual);
+            Assert.AreEqual(expected, actual);
         }
     }
 }
