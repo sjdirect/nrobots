@@ -217,7 +217,7 @@ namespace Robots
                 return true;
 
 
-            string[] uriParts = uri.LocalPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+			string[] uriParts = uri.LocalPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var disallowEntry in userAgentEntry.DisallowEntries)
             {
                 bool result;
@@ -337,7 +337,11 @@ namespace Robots
         private static bool CheckAllowedEntry(AllowEntry entry, string[] uriParts, out bool allow)
         {
             allow = true;
-            string[] robotInstructionUriParts = entry.Url.PathAndQuery.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
+			// Ignoring querystring for now!! Remove the following 3 lines when querystring, in particular the '*?*' token, is handled correctly.
+			if (entry.Url.PathAndQuery.Contains("?") == true) {
+				return allow;
+			}
+			string[] robotInstructionUriParts = entry.Url.PathAndQuery.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (robotInstructionUriParts.Length > uriParts.Length)
                 return false;
@@ -362,7 +366,11 @@ namespace Robots
         private static bool CheckDisallowedEntry(DisallowEntry entry, string[] uriParts, out bool allow)
         {
             allow = true;
-            string[] robotInstructionUriParts = entry.Url.PathAndQuery.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
+			// Ignoring querystring for now!! Remove the following 3 lines when querystring, in particular the '*?*' token, is handled correctly.
+			if (entry.Url.PathAndQuery.Contains("?") == true) {
+				return allow;
+			}
+			string[] robotInstructionUriParts = entry.Url.PathAndQuery.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (robotInstructionUriParts.Length > uriParts.Length)
                 return false;
